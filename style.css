@@ -61,7 +61,7 @@ body {
 
 body {
   letter-spacing: 0.03rem;
-  background: linear-gradient(to bottom, rgb(252, 204, 29), rgba(236, 205, 30, 0.949));
+  background: linear-gradient(to bottom, rgb(248, 184, 22), rgba(244, 179, 16, 0.949));
 }
 
 h1,
@@ -617,7 +617,7 @@ a {
 /** Search Popup
 --------------------------------------------------------------*/
 .search-popup {
-  background-color: #ecc731;
+  background-color: #f7b738;
   position: fixed;
   left: 0;
   top: 0;
