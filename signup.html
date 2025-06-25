@@ -155,139 +155,86 @@
 
     </div>
   </nav>
-  
-
-  <title>My Account - Basic Info</title>
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign Up - SHOEZY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      height: 100vh;
+      font-family: 'Inter', sans-serif;
       background: url('https://content.jdmagicbox.com/v2/comp/malappuram/p5/9999px483.x483.201023163400.y7p5/catalogue/shoezy-vengara-malappuram-shoe-wholesalers-4dy1qhuobg-250.jpg') no-repeat center center/cover;
-      backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Segoe UI', sans-serif;
+      display: flex; justify-content: center; align-items: center; height: 100vh;
+      backdrop-filter: blur(8px); margin: 0;
     }
-
     .account-box {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 40px 30px;
-      width: 320px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-      color: rgb(10, 10, 8);
-      position: relative;
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
+      color: white; padding: 30px; border-radius: 16px; width: 350px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-
-    .back-button {
-      position: absolute;
-      top: 10px;
-      left: 15px;
-      font-size: 24px;
-      color: white;
-      cursor: pointer;
+    input, button {
+      width: 100%; padding: 10px; margin-top: 10px;
+      border: none; border-radius: 8px;
     }
-
-    .account-box h2 {
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 24px;
+    input {
+      background: rgba(255,255,255,0.2); color: white;
     }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    input[type="text"],
-    input[type="tel"] {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      background: rgba(242, 241, 239, 0.2);
-      color: white;
-      font-size: 16px;
-    }
-
-    input::placeholder {
-      color: rgba(122, 120, 109, 0.7);
-    }
-
+    input::placeholder { color: rgba(255,255,255,0.6); }
     button {
-      width: 100%;
-      padding: 12px;
-      background: #000000;
-      color: #f8f5f5;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
+      background: black; color: white; font-weight: bold; cursor: pointer;
     }
-
-    button:hover {
-      background: #490606;
+    button:hover { background: #c40000; }
+    .link-button {
+      display: inline-block; margin-top: 20px; font-size: 14px; color: lightblue; text-decoration: none;
     }
   </style>
 </head>
 <body>
-
   <div class="account-box">
-    <div class="back-button" onclick="window.history.back()">←</div>
-    <h2>My Account</h2>
-    <form id="accountForm">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" placeholder="Enter your name" required>
-      </div>
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" placeholder="Enter your phone number" required>
-      </div>
-      <button type="submit">Save</button>
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="tel" id="phone" placeholder="Phone Number" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Create Account</button>
     </form>
+    <div id="successMessage" style="color: lightgreen; text-align: center; margin-top: 10px; display: none;"></div>
+    <a href="signin.html" class="link-button">🔐 Already have an account? Sign In</a>
   </div>
 
   <script>
-    // Your Supabase credentials (REPLACE THESE!)
-    const SUPABASE_URL = 'https://your-project-id.supabase.co';
-    const SUPABASE_ANON_KEY = 'your-anon-key';
+    const supabase = window.supabase.createClient(
+      'https://rukoeadcdrhtzmlwpktf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+    );
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    document.getElementById("accountForm").addEventListener("submit", async function (e) {
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
       e.preventDefault();
       const name = document.getElementById("name").value;
       const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-      const { data, error } = await supabase
-        .from('users') // table name
-        .insert([{ name, phone }]);
+      const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+      if (authError) return alert("Signup failed: " + authError.message);
 
-      if (error) {
-        alert("❌ Failed to save: " + error.message);
-      } else {
-        alert("✅ Data saved successfully!");
-        document.getElementById("accountForm").reset();
-      }
+      const userId = authData.user?.id;
+      if (!userId) return alert("Please confirm your email to complete signup.");
+
+      const { error: dbError } = await supabase.from("users").insert([{ id: userId, name, phone, email }]);
+      if (dbError) return alert("Database error: " + dbError.message);
+
+      document.getElementById("successMessage").innerText = "🎉 Account created successfully! You can now sign in.";
+      document.getElementById("successMessage").style.display = "block";
+      document.getElementById("signupForm").reset();
     });
   </script>
-
+</body>
+</html>
   <script src="js/jquery.min.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/SmoothScroll.js"></script>

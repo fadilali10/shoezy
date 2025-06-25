@@ -151,273 +151,89 @@
     </defs>
   </svg>
 
-  <div class="preloader text-white fs-6 text-uppercase overflow-hidden"></div>
-
-  <div class="search-popup">
-    <div class="search-popup-container">
-
-      <form role="search" method="get" class="form-group" action="">
-        <input type="search" id="search-form" class="form-control border-0 border-bottom"
-          placeholder="Type and press enter" value="" name="s" />
-        <button type="submit" class="search-submit border-0 position-absolute bg-white"
-          style="top: 15px;right: 15px;"><svg class="search" width="24" height="24">
-            <use xlink:href="#search"></use>
-          </svg></button>
-      </form>
-
-      <h5 class="cat-list-title">Browse Categories</h5>
-
-      <ul class="cat-list">
-        <li class="cat-list-item">
-          <a href="#" title="T-shirts">T-shirts</a>
-        </li>
-        <li class="cat-list-item">
-          <a href="#" title="Handbags">Handbags</a>
-        </li>
-        <li class="cat-list-item">
-          <a href="#" title="Accessories">Accessories</a>
-        </li>
-        <li class="cat-list-item">
-          <a href="#" title="Dresses">Dresses</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-<nav class="navbar navbar-expand-lg" style="background-color: #f7b738;">
-    <div class="container-fluid">
-      <div class="row justify-content-between align-items-center w-100">
-
-        <div class="col-auto">
-          <a class="navbar-brand text-white" href="index.html">
-            <img src="images/main-logo.png" alt="logo" width="100" height="100">
-          </a>
-        </div>
-
-        <div class="col-auto">
-          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-            aria-controls="offcanvasNavbar">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                aria-label="Close"></button>
-            </div>
-
-            <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 gap-1 gap-md-5 pe-3">
-                <li class="nav-item">
-                  <a class="nav-link" href="index.html">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="about.html">Blog</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="Service.html">Services</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="account.html">My Account</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-3 col-lg-auto">
-          <ul class="list-unstyled d-flex m-0">
-            <li class="search-box" class="mx-2">
-              <a href="#search" class="search-button">
-                <svg width="24" height="24" viewBox="0 0 24 24">
-                  <use xlink:href="#search"></use>
-                </svg>
-              </a>
-            </li>
-          </ul>
-        </div>
-
       </div>
 
     </div>
   </nav>
-
-
-  <title>Shopping Cart</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<!-- signin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign In - SHOEZY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: url('https://content.jdmagicbox.com/v2/comp/malappuram/p5/9999px483.x483.201023163400.y7p5/catalogue/shoezy-vengara-malappuram-shoe-wholesalers-4dy1qhuobg-250.jpg') no-repeat center center/cover;
+      display: flex; justify-content: center; align-items: center; height: 100vh;
+      backdrop-filter: blur(8px); margin: 0;
+    }
+    .account-box {
+      background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
+      color: white; padding: 30px; border-radius: 16px; width: 350px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    input, button {
+      width: 100%; padding: 10px; margin-top: 10px;
+      border: none; border-radius: 8px;
+    }
+    input {
+      background: rgba(255,255,255,0.2); color: white;
+    }
+    input::placeholder { color: rgba(255,255,255,0.6); }
+    button {
+      background: black; color: white; font-weight: bold; cursor: pointer;
+    }
+    button:hover { background: #c40000; }
+    .link-button {
+      display: inline-block; margin-top: 20px; font-size: 14px; color: lightblue; text-decoration: none;
+    }
+  </style>
 </head>
 <body>
+  <div class="account-box">
+    <h2>Sign In</h2>
+    <form id="signinForm">
+      <input type="text" id="loginInput" placeholder="Email or Phone" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Sign In</button>
+    </form>
+    <div id="loginSuccess" style="display: none; color: lightgreen; text-align: center; margin-top: 10px;"></div>
+    <a href="signup.html" class="link-button">Don't have an account? Sign Up</a>
+  </div>
 
-<nav class="navbar navbar-light bg-light px-4 justify-content-between">
-  <h4>Your Cart</h4>
-  <a href="index.html" class="btn btn-outline-secondary">⬅ Continue Shopping</a>
-</nav>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://rukoeadcdrhtzmlwpktf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+    );
 
-<div class="container mt-4">
-  <ul id="cartItems" class="list-group mb-3"></ul>
-  <h5>Total: ₹<span id="cartTotal">0</span></h5>
-  <button class="btn btn-success w-100 mt-3" onclick="checkout()">Proceed to Checkout</button>
-</div>
-<div class="d-flex justify-content-center mt-2">
-  <button class="btn btn-outline-danger btn-sm" onclick="resetCart()">Reset</button>
-</div>
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    document.getElementById("signinForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const loginInput = document.getElementById("loginInput").value.trim();
+      const password = document.getElementById("password").value;
 
-  const supabase = createClient('your-url', 'your-anon-key');
+      let email = loginInput;
+      if (!loginInput.includes("@")) {
+        const { data } = await supabase.from("users").select("email").eq("phone", loginInput).single();
+        if (!data) return alert("Phone not registered.");
+        email = data.email;
+      }
 
-  const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return alert("Login failed: " + error.message);
 
-  if (!user) {
-    alert('🔒 You need to be logged in to access this page.');
-    window.location.href = 'login.html';
-  }
-</script>
-
-<script>
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-  function updateCart() {
-    const cartItems = document.getElementById("cartItems");
-    const cartTotal = document.getElementById("cartTotal");
-
-    cartItems.innerHTML = "";
-    let total = 0;
-
-    cart.forEach(item => {
-      total += item.price * item.qty;
-      cartItems.innerHTML += `
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <div>
-            <strong>${item.name}</strong><br>₹${item.price} × ${item.qty}
-          </div>
-          <div>
-            <button class="btn btn-sm btn-secondary" onclick="changeQty('${item.id}', -1)">-</button>
-            <span class="mx-2">${item.qty}</span>
-            <button class="btn btn-sm btn-secondary" onclick="changeQty('${item.id}', 1)">+</button>
-            <button class="btn btn-sm btn-danger ms-2" onclick="removeItem('${item.id}')">×</button>
-          </div>
-        </li>`;
+      document.getElementById("loginSuccess").innerText = "🎉 Login successful!";
+      document.getElementById("loginSuccess").style.display = "block";
+      setTimeout(() => window.location.href = "index.html", 1500);
     });
-
-    cartTotal.textContent = total.toFixed(2);
-  }
-
-  function changeQty(id, delta) {
-    const item = cart.find(i => i.id === id);
-    if (item) {
-      item.qty += delta;
-      if (item.qty <= 0) removeItem(id);
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCart();
-  }
-
-  function removeItem(id) {
-    cart = cart.filter(i => i.id !== id);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCart();
-  }
-
-  function checkout() {
-    if (cart.length === 0) {
-      alert("Cart is empty.");
-    } else {
-      alert("Redirecting to payment...");
-      window.location.href = "payment.html";
-    }
-  }
-
-  updateCart();
-</script>
-
-<script>
-  function resetCart() {
-    if (confirm("Are you sure you want to reset your cart?")) {
-      localStorage.removeItem('cart');
-      location.reload();
-    }
-  }
-</script>
+  </script>
+</body>
+</html>
 
 
-  <footer id="footer" class="mt-5">
-    <div class="container">
-      <div class="row d-flex flex-wrap justify-content-between py-5">
-        <div class="col-md-3 col-sm-6">
-          <div class="footer-menu footer-menu-001">
-            <div class="footer-intro mb-4">
-              <a href="index.html">
-                <img src="images/main-logo.png" alt="logo" width="200" height="200">
-              </a>
-            </div>
-            <p>Shoezy is a fashion Shop that offers a wide range of stylish products for men, including shoes, chappals, and clothing.</p>
-            <div class="social-links">
-              <ul class="list-unstyled d-flex flex-wrap gap-3">
-                <li>
-                  <a href="https://www.facebook.com/profile.php?id=100064077753559" class="text-secondary">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#facebook"></use>
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://youtube.com/@shoezy_692?si=kiVJTz77jPtW4eZG" class="text-secondary">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#youtube"></use>
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.instagram.com/shoezy_2.0?utm_source=ig_web_button_share_sheet&igsh=ZDZDc0NlMzIxNw==" class="text-secondary">
-                    <svg width="24" height="24" viewBox="0 0 24 24">
-                      <use xlink:href="#instagram"></use>
-                    </svg>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="footer-menu footer-menu-002">
-            <h5 class="widget-title text-uppercase mb-4">Quick Links</h5>
-            <ul class="menu-list list-unstyled text-uppercase border-animation-left fs-6">
-              <li class="menu-item">
-                <a href="index.html" class="item-anchor">Home</a>
-              </li>
-              <li class="menu-item">
-                <a href="about.html" class="item-anchor">Blog</a>
-              </li>
-              <li class="menu-item">
-                <a href="Service.html" class="item-anchor">Services</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-          <div class="footer-menu footer-menu-004 border-animation-left">
-            <h5 class="widget-title text-uppercase mb-4">Contact Us</h5>
-            <p>Do you have any questions or suggestions?      <a href="mailto:shoezyramanattukara@gmail.com"
-                class="item-anchor"> shoezyramanattukara@gmail.com</a></p>
-            <p>Do you need support? call Us for more. <a href="tel:+91 9645711333" class="item-anchor">+91 9645711333</a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="border-top py-4">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 text-end">
-            <p>© Copyright 2025 shoezy. All rights reserved.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
   <script src="js/jquery.min.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/SmoothScroll.js"></script>

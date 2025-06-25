@@ -1541,3 +1541,20 @@ a.btn-link.text-light:after {
   background-size: cover;
   transition: transform .3s ease-out;
 }
+.category-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 2px solid #f7b738;
+  padding: 5px;
+  background-color: #5a5050;
+  transition: transform 0.3s;
+}
+.category-icon:hover {
+  transform: scale(1.1);
+}
+@media (max-width: 576px) {
+  h1.section-title {
+    font-size: 24px;
+  }
+}

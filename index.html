@@ -5,7 +5,7 @@
   <title>SHOEZY - Essence of Elegance..!</title>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="format-detection" content="telephone=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="author" content="TemplatesJungle">
@@ -169,16 +169,16 @@
 
       <ul class="cat-list">
         <li class="cat-list-item">
-          <a href="#" title="T-shirts">T-shirts</a>
+          <a href="Genz.html" title="T-shirts">GenZ</a>
         </li>
         <li class="cat-list-item">
-          <a href="#" title="Handbags">Handbags</a>
+          <a href="shoes.html" title="Handbags">Shoes</a>
         </li>
         <li class="cat-list-item">
-          <a href="#" title="Accessories">Accessories</a>
+          <a href="womens.html" title="Accessories">Womens</a>
         </li>
         <li class="cat-list-item">
-          <a href="#" title="Dresses">Dresses</a>
+          <a href="aceessories.html" title="Dresses">Accessories</a>
         </li>
       </ul>
     </div>
@@ -247,6 +247,34 @@
 
     </div>
   </nav>
+<section class="category-icons py-4">
+  <div class="container d-flex flex-wrap justify-content-center gap-4">
+    <div class="text-center">
+      <a href="Genz.html">
+        <img src="images/cat-large-item1.jpg" alt="GenZ" class="category-icon rounded-circle">
+        <div class="mt-2">GenZ</div>
+      </a>
+    </div>
+    <div class="text-center">
+      <a href="shoes.html">
+        <img src="images/insta-item3.jpg" alt="Shoes" class="category-icon rounded-circle">
+        <div class="mt-2">Shoes</div>
+      </a>
+    </div>
+    <div class="text-center">
+      <a href="womens.html">
+        <img src="images/cat-item2.jpg" alt="Womens" class="category-icon rounded-circle">
+        <div class="mt-2">Womens</div>
+      </a>
+    </div>
+    <div class="text-center">
+      <a href="aceessories.html">
+        <img src="images/cat-item3.jpg" alt="Accessories" class="category-icon rounded-circle">
+        <div class="mt-2">Aceessories</div>
+      </a>
+    </div>
+  </div>
+</section>
 
   <section id="billboard" class="py-5" style="background-color: #f7b738;">
     <div class="container">
@@ -879,9 +907,10 @@
     <div class="container">
       <div class="row">
         <div class="logo-content d-flex flex-wrap justify-content-between">
-          <img src="https://www.emrich-consulting.de/UP1/wp-content/uploads/Adidas-Logo-Transparent.png" alt="logo" class="logo-image img-fluid">
+          <img src="https://www.sockshopandshoeco.com/cdn/shop/collections/birkenstock-logo_bd1509dd-1b8d-4c0e-ae21-343903c4bfbc.png?v=1594247540" alt="logo" class="logo-image img-fluid">
           <img src="https://images.seeklogo.com/logo-png/11/2/puma-logo-png_seeklogo-113791.png" alt="logo" class="logo-image img-fluid">
           <img src="https://pngimg.com/uploads/nike/nike_PNG18.png" alt="logo" class="logo-image img-fluid">
+          <img src="https://cdn.iconscout.com/icon/free/png-256/free-adidas-3421616-2854297.png" alt="logo" class="logo-image img-fluid">
         </div>
       </div>
     </div>
@@ -1037,6 +1066,34 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script src="js/script.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script>
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+  }
+
+  function addToCart(id, name, price) {
+    const item = cart.find(i => i.id === id);
+    if (item) item.qty++;
+    else cart.push({ id, name, price, qty: 1 });
+    saveCart();
+    alert("Added to cart");
+  }
+
+  function buyNow(id, name, price) {
+    localStorage.setItem('buyNow', JSON.stringify({ id, name, price, qty: 1 }));
+    window.location.href = "payment.html"; // Replace with real payment gateway
+  }
+
+  function updateCartCount() {
+    const count = cart.reduce((sum, i) => sum + i.qty, 0);
+    document.querySelector(".cart-count").textContent = `(${count})`;
+  }
+
+  updateCartCount();
+</script>
 <script>
   const swiper = new Swiper(".main-swiper", {
     loop: true,
