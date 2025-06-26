@@ -41,70 +41,84 @@
     <button id="payBtn" class="btn btn-dark w-100 mb-3">Pay Now</button>
     <a href="index.html" class="btn btn-outline-dark w-100">← Back to Home</a>
   </div>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+ <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabase = createClient('https://rukoeadcdrhtzmlwpktf.supabase.co', 'YOUR_PUBLIC_ANON_KEY');
+  // ✅ Initialize Supabase
+  const supabase = createClient(
+    'https://rukoeadcdrhtzmlwpktf.supabase.co',
+    'YOUR_PUBLIC_ANON_KEY' // ← Replace this with your actual anon key
+  );
 
-    const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-      alert('🔒 You need to be logged in to access this page.');
-      window.location.href = 'signin.html';
-    }
+  if (!user) {
+    alert('🔒 You need to be logged in to access this page.');
+    window.location.href = 'signin.html';
+  }
 
-    // EmailJS setup
-    emailjs.init("YOUR_EMAILJS_USER_ID");
+  // ✅ Initialize EmailJS
+  emailjs.init("ozi0uU78sfJwVafJw");
 
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-    document.getElementById("paymentTotal").textContent = total.toFixed(2);
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  document.getElementById("paymentTotal").textContent = total.toFixed(2);
 
-    document.getElementById("payBtn").onclick = function () {
-      const options = {
-        key: "rzp_test_1DP5mmOlF5G5ag",
-        amount: total * 100,
-        currency: "INR",
-        name: "Shoezy Store",
-        description: "Fashion Product Order",
-        image: "images/logo.png",
-        handler: async function (response) {
-          const itemSummary = cart.map(item =>
-            `${item.name} x${item.qty} - ₹${item.price * item.qty}`
-          ).join(', ');
+  document.getElementById("payBtn").onclick = function () {
+    const options = {
+      key: "rzp_test_1DP5mmOlF5G5ag",
+      amount: total * 100,
+      currency: "INR",
+      name: "Shoezy Store",
+      description: "Fashion Product Order",
+      image: "images/logo.png",
 
-          // Send email using EmailJS
-          emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-            user_email: user.email,
-            message_html: `
-              <strong>Payment ID:</strong> ${response.razorpay_payment_id}<br/>
-              <strong>Items:</strong> ${itemSummary}<br/>
-              <strong>Total:</strong> ₹${total.toFixed(2)}
-            `
-          }).then(() => {
-            console.log("✅ Email sent successfully");
-          }).catch((err) => {
-            console.error("❌ Email failed", err);
-          });
+      handler: async function (response) {
+        // ✅ Send confirmation email using EmailJS (rich template)
+        emailjs.send("service_h24viqz", "template_5dby2v2", {
+          email: user.email,
+          order_id: response.razorpay_payment_id,
 
-          alert("✅ Payment Successful!\nID: " + response.razorpay_payment_id);
+          orders: cart.map(item => ({
+            name: item.name,
+            units: item.qty,
+            price: (item.price * item.qty).toFixed(2),
+            image_url: item.image || "https://via.placeholder.com/64"
+          })),
+
+          cost: {
+            total: total.toFixed(2),
+            tax: "0.00",
+            shipping: "0.00"
+          }
+        }).then(() => {
+          alert("✅ Payment successful! Confirmation email sent.");
           localStorage.removeItem('cart');
           window.location.href = "thankyou.html";
-        },
-        prefill: {
-          name: "Shoezy Customer",
-          email: user.email,
-          contact: "9999999999"
-        },
-        theme: {
-          color: "#f7b738"
-        }
-      };
-      const rzp = new Razorpay(options);
-      rzp.open();
+        }).catch((err) => {
+          console.error("❌ Email failed:", err);
+          alert("⚠️ Payment complete, but email could not be sent.");
+          window.location.href = "thankyou.html";
+        });
+      },
+
+      prefill: {
+        name: user.user_metadata?.name || "Shoezy Customer",
+        email: user.email,
+        contact: "9999999999"
+      },
+      theme: {
+        color: "#f7b738"
+      }
     };
-  </script>
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  };
+</script>
 
 </body>
 </html>

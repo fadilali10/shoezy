@@ -1,0 +1,19 @@
+backend:
+  name: github
+  repo: fadilali10/shoezy
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "products"
+    label: "Products"
+    folder: "products"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { name: "title", label: "Product Name" }
+      - { name: "price", label: "Price" }
+      - { name: "image", label: "Image", widget: "image" }
+      - { name: "body", label: "Description", widget: "markdown" }

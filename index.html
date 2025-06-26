@@ -221,7 +221,7 @@
                   <a class="nav-link" href="Service.html">Services</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="account.html">My Account</a>
+                  <a class="nav-link" href="signin.html">My Account</a>
                 </li>
               </ul>
             </div>
@@ -242,6 +242,36 @@
             </li>
           </ul>
         </div>
+<!-- Profile Circle with Slide and Name + Image -->
+<div id="profileContainer" style="position: relative; margin-right: 10px;">
+  <img id="profileAvatar"
+       src="https://img.icons8.com/ios-glyphs/60/user--v1.png"
+       alt="Profile"
+       style="width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 2px solid white;" />
+
+  <div id="profileBox" style="
+    position: absolute; top: 60px; right: 0;
+    background: rgba(0, 0, 0, 0.95); color: white;
+    padding: 15px; border-radius: 12px; width: 230px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    font-family: 'Inter', sans-serif;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+  ">
+    <p id="profileName" style="margin: 0;">👤 Welcome, <span id="displayName">User</span></p>
+    <p id="profileEmail" style="font-size: 12px; color: #aaa; margin: 5px 0;"></p>
+    <a href="profile.html" style="display: block; margin: 8px 0; color: lightblue; font-size: 14px;">⚙️ My Profile</a>
+    <button onclick="logoutUser()" style="
+      background: #c40000; color: white; border: none;
+      padding: 6px 12px; border-radius: 6px; cursor: pointer;
+    ">Logout</button>
+  </div>
+</div>
+
+
 
       </div>
 
@@ -259,6 +289,12 @@
       <a href="shoes.html">
         <img src="images/insta-item3.jpg" alt="Shoes" class="category-icon rounded-circle">
         <div class="mt-2">Shoes</div>
+      </a>
+    </div>
+    <div class="text-center">
+      <a href="chappal.html">
+        <img src="images/banner-image-5.jpg" alt="Shoes" class="category-icon rounded-circle">
+        <div class="mt-2">chappals</div>
       </a>
     </div>
     <div class="text-center">
@@ -296,7 +332,7 @@
                 </div>
                 <div class="banner-content py-4">
                   <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">shoes</a>
+                    <a href="shoes.html" class="item-anchor">shoes</a>
                   </h5>
                   <p>Step up your game with shoes that speak style and comfort.</p>
                   <div class="btn-left">
@@ -314,7 +350,7 @@
                 </div>
                 <div class="banner-content py-4">
                   <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">shoes</a>
+                    <a href="shoes.html" class="item-anchor">shoes</a>
                   </h5>
                   <p>Shoes that elevate your outfit and your confidence.</p>
                   <div class="btn-left">
@@ -332,7 +368,7 @@
                 </div>
                 <div class="banner-content py-4">
                   <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Shirts</a>
+                    <a href="Genz.html" class="item-anchor">Shirts</a>
                   </h5>
                   <p>From classic to casual – shirts that fit every mood and moment.</p>
                   <div class="btn-left">
@@ -350,7 +386,7 @@
                 </div>
                 <div class="banner-content py-4">
                   <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Soft leather chappals</a>
+                    <a href="chappal.html" class="item-anchor">Soft leather chappals</a>
                   </h5>
                   <p>Easy on the feet, bold on style – chappals made for everyday comfort.</p>
                   <div class="btn-left">
@@ -368,7 +404,7 @@
                 </div>
                 <div class="banner-content py-4">
                   <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Out crop pants</a>
+                    <a href="Genz.html" class="item-anchor">Out crop pants</a>
                   </h5>
                   <p>Where comfort meets class – pants built for everyday flex.</p>
                   <div class="btn-left">
@@ -386,7 +422,7 @@
                 </div>
                 <div class="banner-content py-4">
                   <h5 class="element-title text-uppercase">
-                    <a href="index.html" class="item-anchor">Soft leather chappals</a>
+                    <a href="chappal.html" class="item-anchor">Soft leather chappals</a>
                   </h5>
                   <p>Slide into comfort with chappals that keep it cool and casual.</p>
                   <div class="btn-left">
@@ -416,13 +452,13 @@
           <div class="col-md-4">
             <div class="cat-item image-zoom-effect">
               <div class="image-holder">
-                <a href="dress.html">
+                <a href="Genz.html">
                   <img src="images/cat-item1.jpg" alt="categories" class="product-image img-fluid">
                 </a>
               </div>
               <div class="category-content">
                 <div class="product-button">
-                  <a href="dress.html" class="btn btn-common text-uppercase">Shop for Dresses</a>
+                  <a href="Genz.html" class="btn btn-common text-uppercase">Shop for GenZ</a>
                 </div>
               </div>
             </div>
@@ -464,14 +500,14 @@
     <div class="container">
       <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
         <h4 class="text-uppercase">Our New Dresses</h4>
-        <a href="dress.html" class="btn-link">View All Products</a>
+        <a href="Genz.html" class="btn-link">View All Products</a>
       </div>
       <div class="swiper product-swiper open-up" data-aos="zoom-out">
         <div class="swiper-wrapper d-flex">
           <div class="swiper-slide">
             <div class="product-item image-zoom-effect link-effect">
               <div class="image-holder position-relative">
-                <a href="dress.html">
+                <a href="Genz.html">
                   <img src="images/product-item-1.jpg" alt="categories" class="product-image img-fluid">
                 </a>
                 <a href="cart.html" class="btn-icon btn-wishlist">
@@ -481,9 +517,9 @@
                 </a>
                 <div class="product-content">
                   <h5 class="element-title text-uppercase fs-5 mt-3">
-                    <a href="dress.html">Dark florish onepiece</a>
+                    <a href="Genz.html">Dark florish onepiece</a>
                   </h5>
-                  <a href="dress.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
+                  <a href="Genz.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
                 </div>
               </div>
             </div>
@@ -491,7 +527,7 @@
           <div class="swiper-slide">
             <div class="product-item image-zoom-effect link-effect">
               <div class="image-holder position-relative">
-                <a href="dress.html">
+                <a href="Genz.html">
                   <img src="images/product-item-2.jpg" alt="categories" class="product-image img-fluid">
                 </a>
                 <a href="cart.html" class="btn-icon btn-wishlist">
@@ -501,9 +537,9 @@
                 </a>
                 <div class="product-content">
                   <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="dress.html">Baggy Shirt</a>
+                    <a href="Genz.html">Baggy Shirt</a>
                   </h5>
-                  <a href="dress.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
+                  <a href="Genz.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
                 </div>
               </div>
             </div>
@@ -511,7 +547,7 @@
           <div class="swiper-slide">
             <div class="product-item image-zoom-effect link-effect">
               <div class="image-holder position-relative">
-                <a href="dress.html">
+                <a href="Genz.html">
                   <img src="images/product-item-3.jpg" alt="categories" class="product-image img-fluid">
                 </a>
                 <a href="cart.html" class="btn-icon btn-wishlist">
@@ -521,9 +557,9 @@
                 </a>
                 <div class="product-content">
                   <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="dress.html">Cotton off-white shirt</a>
+                    <a href="Genz.html">Cotton off-white shirt</a>
                   </h5>
-                  <a href="dress.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
+                  <a href="Genz.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
                 </div>
               </div>
             </div>
@@ -531,7 +567,7 @@
           <div class="swiper-slide">
             <div class="product-item image-zoom-effect link-effect">
               <div class="image-holder position-relative">
-                <a href="dress.html">
+                <a href="Genz.html">
                   <img src="images/product-item-4.jpg" alt="categories" class="product-image img-fluid">
                 </a>
                 <a href="cart.html" class="btn-icon btn-wishlist">
@@ -541,9 +577,9 @@
                 </a>
                 <div class="product-content">
                   <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="dress.html">Crop sweater</a>
+                    <a href="Genz.html">Crop sweater</a>
                   </h5>
-                  <a href="dress.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
+                  <a href="Genz.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
                 </div>
               </div>
             </div>
@@ -551,7 +587,7 @@
           <div class="swiper-slide">
             <div class="product-item image-zoom-effect link-effect">
               <div class="image-holder position-relative">
-                <a href="dress.html">
+                <a href="Genz.html">
                   <img src="images/product-item-10.jpg" alt="categories" class="product-image img-fluid">
                 </a>
                 <a href="cart.html" class="btn-icon btn-wishlist">
@@ -561,9 +597,9 @@
                 </a>
                 <div class="product-content">
                   <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="dress.html">Crop sweater</a>
+                    <a href="Genz.html">Crop sweater</a>
                   </h5>
-                  <a href="dress.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
+                  <a href="Genz.html" class="text-decoration-none" data-after="Click Here"><span>Discover Now</span></a>
                 </div>
               </div>
             </div>
@@ -1108,6 +1144,76 @@
     freeModeMomentum: false,
   });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://rukoeadcdrhtzmlwpktf.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+  );
+
+  async function loadUserProfile() {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session || !session.user) {
+      window.location.href = "signin.html";
+      return;
+    }
+
+    const user = session.user;
+    const userId = user.id;
+    const name = user.user_metadata?.name || "User";
+    const email = user.email;
+    const avatar = user.user_metadata?.avatar_url;
+
+    document.getElementById("displayName").innerText = name;
+    document.getElementById("profileEmail").innerText = email;
+
+    // If avatar available, show it
+    if (avatar) {
+      document.getElementById("profileAvatar").src = avatar;
+    }
+
+    // Optional: load name from 'users' table
+    const { data, error } = await supabase
+      .from("users")
+      .select("name")
+      .eq("id", userId)
+      .single();
+
+    if (data?.name) {
+      document.getElementById("displayName").innerText = data.name;
+    }
+  }
+
+  async function logoutUser() {
+    await supabase.auth.signOut();
+    window.location.href = "signin.html";
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("profileAvatar");
+    const box = document.getElementById("profileBox");
+
+    toggle.addEventListener("click", () => {
+      const isVisible = box.style.opacity === "1";
+      box.style.opacity = isVisible ? "0" : "1";
+      box.style.transform = isVisible ? "translateY(-10px)" : "translateY(0)";
+      box.style.pointerEvents = isVisible ? "none" : "auto";
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!document.getElementById("profileContainer").contains(e.target)) {
+        box.style.opacity = "0";
+        box.style.transform = "translateY(-10px)";
+        box.style.pointerEvents = "none";
+      }
+    });
+
+    loadUserProfile();
+  });
+</script>
+
+
 
 </body>
 </html>

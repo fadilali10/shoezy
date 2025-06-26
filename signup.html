@@ -214,27 +214,50 @@
 
     document.getElementById("signupForm").addEventListener("submit", async function (e) {
       e.preventDefault();
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const email = document.getElementById("email").value;
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
+      // Step 1: Sign up
       const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
-      if (authError) return alert("Signup failed: " + authError.message);
+
+      if (authError) {
+        alert("Signup failed: " + authError.message);
+        return;
+      }
+
+      // Step 2: Show confirmation message
+      alert("✅ A confirmation email has been sent. Please check your inbox and verify your email.");
 
       const userId = authData.user?.id;
-      if (!userId) return alert("Please confirm your email to complete signup.");
 
-      const { error: dbError } = await supabase.from("users").insert([{ id: userId, name, phone, email }]);
-      if (dbError) return alert("Database error: " + dbError.message);
+      // Step 3: Insert into 'users' table if ID is returned
+      if (userId) {
+        const { error: dbError } = await supabase.from("users").insert([
+          { id: userId, name, phone, email }
+        ]);
+        if (dbError) {
+          console.error("Database error:", dbError.message);
+        }
+      }
 
-      document.getElementById("successMessage").innerText = "🎉 Account created successfully! You can now sign in.";
+      // Step 4: Optionally resend email (if needed)
+      await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      // Step 5: Show success message
+      document.getElementById("successMessage").innerText = "🎉 Account created! Please confirm your email before signing in.";
       document.getElementById("successMessage").style.display = "block";
       document.getElementById("signupForm").reset();
     });
   </script>
 </body>
 </html>
+
   <script src="js/jquery.min.js"></script>
   <script src="js/plugins.js"></script>
   <script src="js/SmoothScroll.js"></script>

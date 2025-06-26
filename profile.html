@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Profile - SHOEZY</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f4f4;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; margin: 0;
+    }
+    .profile-box {
+      background: white; padding: 30px; border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1); width: 350px;
+    }
+    input, button {
+      width: 100%; padding: 10px; margin-top: 10px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button {
+      background: black; color: white; font-weight: bold; cursor: pointer;
+    }
+    button:hover {
+      background: #c40000;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-box">
+    <h2>Edit Profile</h2>
+    <form id="profileForm">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="tel" id="phone" placeholder="Phone Number" required />
+      <button type="submit">Update Profile</button>
+    </form>
+    <p id="message" style="color: green; text-align: center; margin-top: 10px;"></p>
+  </div>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://rukoeadcdrhtzmlwpktf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+    );
+
+    async function loadUserData() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return window.location.href = "signin.html";
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("name, phone")
+        .eq("id", session.user.id)
+        .single();
+
+      if (error) return alert("Error loading profile");
+
+      document.getElementById("name").value = data.name || "";
+      document.getElementById("phone").value = data.phone || "";
+    }
+
+    document.getElementById("profileForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user?.id;
+      if (!userId) return alert("Not logged in");
+
+      const { error } = await supabase
+        .from("users")
+        .update({ name, phone })
+        .eq("id", userId);
+
+      if (error) return alert("Update failed: " + error.message);
+
+      const message = document.getElementById("message");
+      message.innerText = "✅ Profile updated successfully! Redirecting...";
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    });
+
+    loadUserData();
+  </script>
+</body>
+</html>
