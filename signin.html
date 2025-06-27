@@ -222,12 +222,17 @@
         email = data.email;
       }
 
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) return alert("Login failed: " + error.message);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-      document.getElementById("loginSuccess").innerText = "🎉 Login successful!";
-      document.getElementById("loginSuccess").style.display = "block";
-      setTimeout(() => window.location.href = "index.html", 1500);
+if (error) return alert("Login failed: " + error.message);
+
+// Optional: session gets handled automatically in most cases, but we add this for robustness
+localStorage.setItem("supabase.auth.token", JSON.stringify(data.session));
+
+document.getElementById("loginSuccess").innerText = "🎉 Login successful!";
+document.getElementById("loginSuccess").style.display = "block";
+setTimeout(() => window.location.href = "index.html", 1500);
+
     });
   </script>
 </body>

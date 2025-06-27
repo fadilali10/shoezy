@@ -50,15 +50,24 @@
   // ✅ Initialize Supabase
   const supabase = createClient(
     'https://rukoeadcdrhtzmlwpktf.supabase.co',
-    'YOUR_PUBLIC_ANON_KEY' // ← Replace this with your actual anon key
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ' // ← Replace this with your actual anon key
   );
+// Restore session from localStorage manually
+const savedSession = JSON.parse(localStorage.getItem("sb-session"));
+if (savedSession) {
+  await supabase.auth.setSession(savedSession);
+}
 
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
 
-  if (!user) {
-    alert('🔒 You need to be logged in to access this page.');
-    window.location.href = 'signin.html';
-  }
+const { data, error } = await supabase.auth.getUser();
+user = data.user;
+
+if (!user) {
+  alert('🔒 You need to be logged in to access this page.');
+  window.location.href = 'signin.html';
+}
+
 
   // ✅ Initialize EmailJS
   emailjs.init("ozi0uU78sfJwVafJw");
