@@ -1,10 +1,9 @@
 backend:
-  name: github
-  repo: fadilali10/shoezy
+  name: git-gateway
   branch: main
 
-media_folder: "images"
-public_folder: "/images"
+media_folder: "images/uploads"     # where uploaded images go in repo
+public_folder: "/images/uploads"   # public URL path
 
 collections:
   - name: "products"
@@ -13,7 +12,20 @@ collections:
     create: true
     slug: "{{slug}}"
     fields:
-      - { name: "title", label: "Product Name" }
-      - { name: "price", label: "Price" }
-      - { name: "image", label: "Image", widget: "image" }
-      - { name: "body", label: "Description", widget: "markdown" }
+      - label: "Product Name"
+        name: "title"
+        widget: "string"
+
+      - label: "Price (in ₹)"
+        name: "price"
+        widget: "number"
+        min: 0
+        step: 1
+
+      - label: "Product Image"
+        name: "image"
+        widget: "image"
+
+      - label: "Description"
+        name: "description"
+        widget: "text"

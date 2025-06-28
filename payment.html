@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Payment - Shoezy</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     body {
       background: linear-gradient(to bottom, #f7b738, #f2c94c);
@@ -14,18 +14,30 @@
     }
     .payment-box {
       background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      max-width: 500px;
-      margin: 50px auto;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      padding: 2.5rem;
+      border-radius: 20px;
+      max-width: 540px;
+      margin: 60px auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
     .logo {
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     .logo img {
-      height: 60px;
+      height: 64px;
+    }
+    .btn-custom {
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 10px 16px;
+    }
+    h4, h5, p {
+      color: #333;
+    }
+    .text-muted {
+      font-size: 14px;
     }
   </style>
 </head>
@@ -38,86 +50,101 @@
     <h4 class="mb-3">Complete Your Payment</h4>
     <p class="text-muted">Pay securely using UPI / Google Pay / PhonePe</p>
     <h5 class="mb-4">Total: ₹<span id="paymentTotal">0</span></h5>
-    <button id="payBtn" class="btn btn-dark w-100 mb-3">Pay Now</button>
-    <a href="index.html" class="btn btn-outline-dark w-100">← Back to Home</a>
+    <button id="payBtn" class="btn btn-dark w-100 mb-3 btn-custom">Pay Now</button>
+    <a href="index.html" class="btn btn-outline-dark w-100 btn-custom">← Back to Home</a>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
- <script type="module">
+<script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-  // ✅ Initialize Supabase
   const supabase = createClient(
     'https://rukoeadcdrhtzmlwpktf.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ' // ← Replace this with your actual anon key
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
   );
-// Restore session from localStorage manually
-const savedSession = JSON.parse(localStorage.getItem("sb-session"));
-if (savedSession) {
-  await supabase.auth.setSession(savedSession);
-}
 
-  let user = null;
+  const savedSession = JSON.parse(localStorage.getItem("sb-session"));
+  if (savedSession) await supabase.auth.setSession(savedSession);
 
-const { data, error } = await supabase.auth.getUser();
-user = data.user;
+  const { data, error } = await supabase.auth.getUser();
+  const user = data?.user;
 
-if (!user) {
-  alert('🔒 You need to be logged in to access this page.');
-  window.location.href = 'signin.html';
-}
+  if (!user) {
+    alert('🔒 Please sign in first.');
+    window.location.href = 'signin.html';
+  }
 
+  const { data: userInfo } = await supabase
+    .from("users")
+    .select("name, phone")
+    .eq("id", user.id)
+    .single();
 
-  // ✅ Initialize EmailJS
-  emailjs.init("ozi0uU78sfJwVafJw");
+  const userName = userInfo?.name || user.user_metadata?.name || "Shoezy Customer";
+  const userPhone = userInfo?.phone || "9999999999";
+  const userEmail = user.email;
 
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  emailjs.init("ZpLvtz_4StREp5sA7"); // Your EmailJS public key
+
+  const buyNow = JSON.parse(localStorage.getItem("buyNow"));
+  const cart = buyNow ? [buyNow] : JSON.parse(localStorage.getItem("cart")) || [];
+
+  let total = cart.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
   document.getElementById("paymentTotal").textContent = total.toFixed(2);
 
   document.getElementById("payBtn").onclick = function () {
+    const orderSummary = cart.map(item =>
+      `• ${item.name} (Qty: ${item.qty || 1}) - ₹${(item.price * (item.qty || 1)).toFixed(2)}`
+    ).join('\n');
+
+    const firstImage = cart[0]?.img || "https://via.placeholder.com/100";
+
     const options = {
       key: "rzp_test_1DP5mmOlF5G5ag",
       amount: total * 100,
       currency: "INR",
       name: "Shoezy Store",
       description: "Fashion Product Order",
-      image: "images/logo.png",
+      image: "images/main-logo.png",
 
-      handler: async function (response) {
-        // ✅ Send confirmation email using EmailJS (rich template)
-        emailjs.send("service_h24viqz", "template_5dby2v2", {
-          email: user.email,
+      handler: function (response) {
+        // Send email to customer
+        emailjs.send("service_ynzq9eq", "template_prwvcec", {
+          name: userName,
+          phone: userPhone,
+          email: userEmail,
           order_id: response.razorpay_payment_id,
-
-          orders: cart.map(item => ({
-            name: item.name,
-            units: item.qty,
-            price: (item.price * item.qty).toFixed(2),
-            image_url: item.image || "https://via.placeholder.com/64"
-          })),
-
-          cost: {
-            total: total.toFixed(2),
-            tax: "0.00",
-            shipping: "0.00"
-          }
+          total: total.toFixed(2),
+          orders: orderSummary,
+          image_url: firstImage
         }).then(() => {
-          alert("✅ Payment successful! Confirmation email sent.");
-          localStorage.removeItem('cart');
+          // Then send email to admin
+          return emailjs.send("service_ynzq9eq", "template_prwvcec", {
+            name: userName,
+            phone: userPhone,
+            email: "shoezyweb@gmail.com", // Admin email
+            order_id: response.razorpay_payment_id,
+            total: total.toFixed(2),
+            orders: orderSummary,
+            image_url: firstImage
+          });
+        }).then(() => {
+          alert("✅ Payment successful! Emails sent.");
+          localStorage.removeItem("cart");
+          localStorage.removeItem("buyNow");
           window.location.href = "thankyou.html";
         }).catch((err) => {
-          console.error("❌ Email failed:", err);
-          alert("⚠️ Payment complete, but email could not be sent.");
+          console.error("❌ Email error:", err);
+          alert("⚠️ Payment done but email not sent.");
+          localStorage.removeItem("cart");
+          localStorage.removeItem("buyNow");
           window.location.href = "thankyou.html";
         });
       },
 
       prefill: {
-        name: user.user_metadata?.name || "Shoezy Customer",
-        email: user.email,
-        contact: "9999999999"
+        name: userName,
+        email: userEmail,
+        contact: userPhone
       },
       theme: {
         color: "#f7b738"
@@ -128,6 +155,7 @@ if (!user) {
     rzp.open();
   };
 </script>
+
 
 </body>
 </html>

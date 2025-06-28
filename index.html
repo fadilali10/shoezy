@@ -3,6 +3,7 @@
 
 <head>
   <title>SHOEZY - Essence of Elegance..!</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -264,7 +265,8 @@
     <p id="profileName" style="margin: 0;">👤 Welcome, <span id="displayName">User</span></p>
     <p id="profileEmail" style="font-size: 12px; color: #aaa; margin: 5px 0;"></p>
     <a href="profile.html" style="display: block; margin: 8px 0; color: lightblue; font-size: 14px;">⚙️ My Profile</a>
-    <button onclick="logoutUser()" style="
+<a id="adminLink" href="admin.html" style="display: none; margin: 8px 0; color: lightgreen; font-size: 14px;">🛠️ Admin Panel</a>
+<button onclick="logoutUser()" style="
       background: #c40000; color: white; border: none;
       padding: 6px 12px; border-radius: 6px; cursor: pointer;
     ">Logout</button>
@@ -1104,6 +1106,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
+<!-- Cart & BuyNow Logic -->
 <script>
   let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -1122,30 +1125,35 @@
 
   function buyNow(id, name, price) {
     localStorage.setItem('buyNow', JSON.stringify({ id, name, price, qty: 1 }));
-    window.location.href = "payment.html"; // Replace with real payment gateway
+    window.location.href = "payment.html";
   }
 
   function updateCartCount() {
     const count = cart.reduce((sum, i) => sum + i.qty, 0);
-    document.querySelector(".cart-count").textContent = `(${count})`;
+    const countDisplay = document.querySelector(".cart-count");
+    if (countDisplay) countDisplay.textContent = `(${count})`;
   }
 
   updateCartCount();
 </script>
+
+<!-- Swiper Slider -->
 <script>
   const swiper = new Swiper(".main-swiper", {
     loop: true,
     slidesPerView: 'auto',
     spaceBetween: 0,
-    speed: 5000, // smooth continuous speed
+    speed: 5000,
     autoplay: {
-      delay: 0, // no pause
+      delay: 0,
       disableOnInteraction: false,
     },
     freeMode: true,
     freeModeMomentum: false,
   });
 </script>
+
+<!-- Supabase & Profile + Product Loader -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
   const supabase = window.supabase.createClient(
@@ -1157,7 +1165,8 @@
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session || !session.user) {
-      window.location.href = "signin.html";
+      document.getElementById("displayName").innerText = "Guest";
+      document.getElementById("profileEmail").innerText = "Not signed in";
       return;
     }
 
@@ -1170,12 +1179,14 @@
     document.getElementById("displayName").innerText = name;
     document.getElementById("profileEmail").innerText = email;
 
-    // If avatar available, show it
+    if (email === "shoezyweb@gmail.com") {
+      document.getElementById("adminLink").style.display = "block";
+    }
+
     if (avatar) {
       document.getElementById("profileAvatar").src = avatar;
     }
 
-    // Optional: load name from 'users' table
     const { data, error } = await supabase
       .from("users")
       .select("name")
@@ -1192,19 +1203,47 @@
     window.location.href = "signin.html";
   }
 
+  async function loadProducts() {
+    const { data: products, error } = await supabase.from("products").select("*");
+    if (error) {
+      console.error("Error loading products:", error.message);
+      return;
+    }
+
+    const container = document.getElementById("product-list");
+    if (!container) return;
+
+    container.innerHTML = products.map(product => `
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <img src="${product.image}" class="card-img-top" alt="${product.name}">
+          <div class="card-body">
+            <h5 class="card-title">${product.name}</h5>
+            <p class="card-text">₹${product.price}</p>
+            <button class="btn btn-dark w-100 mb-2" onclick="addToCart('${product.id}', '${product.name}', ${product.price})">Add to Cart</button>
+            <button class="btn btn-outline-dark w-100" onclick="buyNow('${product.id}', '${product.name}', ${product.price})">Buy Now</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     const toggle = document.getElementById("profileAvatar");
     const box = document.getElementById("profileBox");
 
-    toggle.addEventListener("click", () => {
-      const isVisible = box.style.opacity === "1";
-      box.style.opacity = isVisible ? "0" : "1";
-      box.style.transform = isVisible ? "translateY(-10px)" : "translateY(0)";
-      box.style.pointerEvents = isVisible ? "none" : "auto";
-    });
+    if (toggle && box) {
+      toggle.addEventListener("click", () => {
+        const isVisible = box.style.opacity === "1";
+        box.style.opacity = isVisible ? "0" : "1";
+        box.style.transform = isVisible ? "translateY(-10px)" : "translateY(0)";
+        box.style.pointerEvents = isVisible ? "none" : "auto";
+      });
+    }
 
     document.addEventListener("click", function (e) {
-      if (!document.getElementById("profileContainer").contains(e.target)) {
+      const profile = document.getElementById("profileContainer");
+      if (profile && !profile.contains(e.target)) {
         box.style.opacity = "0";
         box.style.transform = "translateY(-10px)";
         box.style.pointerEvents = "none";
@@ -1212,10 +1251,9 @@
     });
 
     loadUserProfile();
+    loadProducts();
   });
 </script>
-
-
 
 </body>
 </html>

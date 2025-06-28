@@ -1,90 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <meta charset="UTF-8" />
   <title>My Profile - SHOEZY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f4f4f4;
-      display: flex; justify-content: center; align-items: center;
-      height: 100vh; margin: 0;
+      background: linear-gradient(135deg, #f7b738 0%, #ffe08a 100%);
+      background-attachment: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
     .profile-box {
-      background: white; padding: 30px; border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1); width: 350px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 35px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 360px;
+      max-width: 90%;
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.5s ease;
+    }
+    .profile-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      font-weight: 700;
     }
     input, button {
-      width: 100%; padding: 10px; margin-top: 10px;
-      border: 1px solid #ccc; border-radius: 6px;
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+    input:focus {
+      border-color: #f7b738;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(247,183,56,0.3);
     }
     button {
-      background: black; color: white; font-weight: bold; cursor: pointer;
+      background: black;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
     }
     button:hover {
       background: #c40000;
+    }
+    #message {
+      color: #28a745;
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .back-btn {
+      display: block;
+      text-align: center;
+      margin-top: 16px;
+      text-decoration: none;
+      font-size: 14px;
+      color: #000;
+      font-weight: 600;
+    }
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="profile-box">
-    <h2>Edit Profile</h2>
+    <h2>👤 My Shoezy Profile</h2>
     <form id="profileForm">
+      <input type="email" id="email" disabled style="background-color:#f0f0f0" />
       <input type="text" id="name" placeholder="Full Name" required />
       <input type="tel" id="phone" placeholder="Phone Number" required />
-      <button type="submit">Update Profile</button>
+      <button type="submit">💾 Update Profile</button>
     </form>
-    <p id="message" style="color: green; text-align: center; margin-top: 10px;"></p>
+    <p id="message"></p>
+    <a href="index.html" class="back-btn">← Back to Home</a>
   </div>
 
-  <script>
-    const supabase = window.supabase.createClient(
-      'https://rukoeadcdrhtzmlwpktf.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
-    );
+ <script>
+  const supabase = window.supabase.createClient(
+    'https://rukoeadcdrhtzmlwpktf.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+  );
 
-    async function loadUserData() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return window.location.href = "signin.html";
-
-      const { data, error } = await supabase
-        .from("users")
-        .select("name, phone")
-        .eq("id", session.user.id)
-        .single();
-
-      if (error) return alert("Error loading profile");
-
-      document.getElementById("name").value = data.name || "";
-      document.getElementById("phone").value = data.phone || "";
+  async function loadUserData() {
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) {
+      console.error("Session error:", sessionError.message);
+      return alert("Session fetch failed.");
     }
 
-    document.getElementById("profileForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
+    if (!session) return window.location.href = "signin.html";
 
-      const { data: { session } } = await supabase.auth.getSession();
-      const userId = session?.user?.id;
-      if (!userId) return alert("Not logged in");
+    const user = session.user;
 
-      const { error } = await supabase
-        .from("users")
-        .update({ name, phone })
-        .eq("id", userId);
+    // Check if user exists
+    const { data: exists, error: fetchError } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", user.id)
+      .single();
 
-      if (error) return alert("Update failed: " + error.message);
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      console.error("User fetch error:", fetchError.message);
+    }
 
-      const message = document.getElementById("message");
-      message.innerText = "✅ Profile updated successfully! Redirecting...";
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1500);
-    });
+    if (!exists) {
+      const { error: insertError } = await supabase.from("users").insert({
+        id: user.id,
+        name: user.user_metadata?.name || "",
+        phone: "",
+        email: user.email
+      });
+      if (insertError) {
+        console.error("Insert failed:", insertError.message);
+        return alert("Failed to create user profile.");
+      }
+    }
 
-    loadUserData();
-  </script>
+    // Now fetch profile data
+    const { data, error } = await supabase
+      .from("users")
+      .select("name, phone")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      console.error("Profile load error:", error.message);
+      return alert("Error loading profile: " + error.message);
+    }
+
+    document.getElementById("email").value = user.email;
+    document.getElementById("name").value = data.name || "";
+    document.getElementById("phone").value = data.phone || "";
+  }
+
+  document.getElementById("profileForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) return alert("Not logged in");
+
+    const userId = session.user.id;
+
+    const { error } = await supabase
+      .from("users")
+      .update({ name, phone })
+      .eq("id", userId);
+
+    if (error) {
+      console.error("Update failed:", error.message);
+      return alert("Update failed: " + error.message);
+    }
+
+    const message = document.getElementById("message");
+    message.innerText = "✅ Profile updated successfully! Redirecting...";
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1500);
+  });
+
+  loadUserData();
+</script>
+
 </body>
 </html>

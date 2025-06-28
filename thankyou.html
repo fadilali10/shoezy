@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <meta charset="UTF-8" />
   <title>Thank You - SHOEZY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,46 +14,65 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
 
     .thankyou-box {
       background: white;
-      padding: 2rem 3rem;
-      border-radius: 16px;
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      max-width: 500px;
+      max-width: 480px;
       width: 100%;
+      border: 2px solid #ffd700;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      animation: fadeInUp 1s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .thankyou-box img {
       height: 80px;
       margin-bottom: 1rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .thankyou-box h2 {
       font-weight: 700;
       margin-bottom: 1rem;
-      color: #333;
+      color: #222;
     }
 
     .thankyou-box p {
-      color: #555;
+      color: #444;
+      font-size: 16px;
       margin-bottom: 2rem;
     }
 
     .btn-home {
       background: black;
       color: white;
-      border-radius: 8px;
-      padding: 10px 20px;
+      border-radius: 10px;
+      padding: 12px 24px;
       font-weight: 600;
+      font-size: 15px;
       text-decoration: none;
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: inline-block;
     }
 
     .btn-home:hover {
       background: #c40000;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(196, 0, 0, 0.3);
     }
   </style>
 </head>

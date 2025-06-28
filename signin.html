@@ -3,6 +3,7 @@
 
 <head>
   <title>SHOEZY - Essence of Elegance..!</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -155,7 +156,6 @@
 
     </div>
   </nav>
-<!-- signin.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,28 +167,87 @@
     body {
       font-family: 'Inter', sans-serif;
       background: url('https://content.jdmagicbox.com/v2/comp/malappuram/p5/9999px483.x483.201023163400.y7p5/catalogue/shoezy-vengara-malappuram-shoe-wholesalers-4dy1qhuobg-250.jpg') no-repeat center center/cover;
-      display: flex; justify-content: center; align-items: center; height: 100vh;
-      backdrop-filter: blur(8px); margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      backdrop-filter: blur(8px);
+      margin: 0;
     }
+
     .account-box {
-      background: rgba(255,255,255,0.1); backdrop-filter: blur(12px);
-      color: white; padding: 30px; border-radius: 16px; width: 350px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      color: white;
+      padding: 30px;
+      border-radius: 16px;
+      width: 350px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-align: center;
+      animation: fadeSlideIn 1s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
     }
+
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     input, button {
-      width: 100%; padding: 10px; margin-top: 10px;
-      border: none; border-radius: 8px;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
     }
+
     input {
-      background: rgba(255,255,255,0.2); color: white;
+      background: rgba(255,255,255,0.2);
+      color: white;
     }
-    input::placeholder { color: rgba(255,255,255,0.6); }
+
+    input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
     button {
-      background: black; color: white; font-weight: bold; cursor: pointer;
+      background: black;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
-    button:hover { background: #c40000; }
+
+    button:hover {
+      background: #c40000;
+    }
+
     .link-button {
-      display: inline-block; margin-top: 20px; font-size: 14px; color: lightblue; text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 14px;
+      color: lightblue;
+      text-decoration: none;
+    }
+
+    .back-home {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .back-home:hover {
+      background: rgba(255, 255, 255, 0.2);
     }
   </style>
 </head>
@@ -200,8 +259,9 @@
       <input type="password" id="password" placeholder="Password" required>
       <button type="submit">Sign In</button>
     </form>
-    <div id="loginSuccess" style="display: none; color: lightgreen; text-align: center; margin-top: 10px;"></div>
-    <a href="signup.html" class="link-button">Don't have an account? Sign Up</a>
+    <div id="loginSuccess" style="display: none; color: lightgreen; margin-top: 10px;"></div>
+    <a href="signup.html" class="link-button">Don't have an account? Sign Up</a><br>
+    <a href="index.html" class="back-home">← Back to Home</a>
   </div>
 
   <script>
@@ -223,20 +283,18 @@
       }
 
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) return alert("Login failed: " + error.message);
 
-if (error) return alert("Login failed: " + error.message);
+      localStorage.setItem("supabase.auth.token", JSON.stringify(data.session));
 
-// Optional: session gets handled automatically in most cases, but we add this for robustness
-localStorage.setItem("supabase.auth.token", JSON.stringify(data.session));
-
-document.getElementById("loginSuccess").innerText = "🎉 Login successful!";
-document.getElementById("loginSuccess").style.display = "block";
-setTimeout(() => window.location.href = "index.html", 1500);
-
+      document.getElementById("loginSuccess").innerText = "🎉 Login successful!";
+      document.getElementById("loginSuccess").style.display = "block";
+      setTimeout(() => window.location.href = "index.html", 1500);
     });
   </script>
 </body>
 </html>
+
 
 
   <script src="js/jquery.min.js"></script>
