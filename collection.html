@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shoezy - Collection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .product-section { padding: 3rem 0; }
+    .product-title { font-weight: bold; margin-bottom: 1rem; }
+    .product-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    .product-card {
+      width: 250px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      background: #fff;
+      transition: transform 0.3s;
+    }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    .product-card .details {
+      padding: 1rem;
+      text-align: center;
+    }
+    .product-card .price {
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+    .offer-tag {
+      font-size: 0.8rem;
+      color: red;
+      font-weight: bold;
+    }
+    .product-card button {
+      width: 100%;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="bg-dark p-3">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a href="index.html"><img src="images/main-logo.png" alt="Shoezy Logo" height="40"/></a>
+    <div>
+      <a href="index.html" class="btn btn-outline-light me-2">← Home</a>
+      <a href="cart.html" class="btn btn-outline-light">🛒 Cart (<span class="cart-count">0</span>)</a>
+    </div>
+  </div>
+</header>
+
+<!-- Product Sections -->
+<main class="container">
+  <section class="product-section">
+    <h2 class="text-center product-title">👟 Footwear Collection</h2>
+    <div id="footwear-products" class="product-grid"></div>
+  </section>
+
+  <section class="product-section">
+    <h2 class="text-center product-title">👕 Clothing Collection</h2>
+    <div id="clothing-products" class="product-grid"></div>
+  </section>
+
+  <section class="product-section">
+    <h2 class="text-center product-title">🎒 Accessories</h2>
+    <div id="others-products" class="product-grid"></div>
+  </section>
+</main>
+
+<!-- Supabase Script -->
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const supabase = createClient(
+    'https://rukoeadcdrhtzmlwpktf.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+  );
+
+  let allProducts = [];
+
+  async function loadCollections() {
+    const { data, error } = await supabase
+      .from("shoezy")
+      .select("*")
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("❌ Failed to load products:", error.message);
+      return;
+    }
+
+    allProducts = data;
+
+    const footwear = data.filter(p => p.category === "footwear").slice(0, 5);
+    const clothing = data.filter(p => p.category === "clothing").slice(0, 5);
+    const others = data.filter(p => p.category === "others").slice(0, 5);
+
+    document.getElementById("footwear-products").innerHTML = footwear.map(createCard).join('');
+    document.getElementById("clothing-products").innerHTML = clothing.map(createCard).join('');
+    document.getElementById("others-products").innerHTML = others.map(createCard).join('');
+
+    updateCartCount();
+  }
+
+  function createCard(product) {
+    const discount = Math.round(100 - (product.price_discounted / product.price_original * 100));
+    return `
+      <div class="product-card">
+        <img src="${product.img}" alt="${product.name}" />
+        <div class="details">
+          <h6>${product.name}</h6>
+          <p class="price">₹${product.price_discounted} <del>₹${product.price_original}</del></p>
+          <span class="offer-tag">${discount}% OFF</span>
+          <button class="btn btn-dark btn-sm" onclick="addToCart(${product.id})">🛒 Add to Cart</button>
+          <button class="btn btn-danger btn-sm" onclick="buyNow(${product.id})">⚡ Buy Now</button>
+        </div>
+      </div>
+    `;
+  }
+
+  window.addToCart = function (id) {
+    const product = allProducts.find(p => p.id === id);
+    if (!product) return;
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const existing = cart.find(item => item.id === product.id);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ ...product, qty: 1, price: product.price_discounted });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("✅ Added to cart!");
+    updateCartCount();
+  };
+
+  window.buyNow = function (id) {
+    const product = allProducts.find(p => p.id === id);
+    if (!product) return;
+
+    const itemToBuy = { ...product, qty: 1, price: product.price_discounted };
+    localStorage.setItem("buyNow", JSON.stringify(itemToBuy));
+    window.location.href = "payment.html";
+  };
+
+  function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    document.querySelector(".cart-count").textContent = totalItems;
+  }
+
+  document.addEventListener("DOMContentLoaded", loadCollections);
+</script>
+
+<!-- Footer -->
+<footer class="bg-dark text-white pt-5 pb-3 mt-5">
+  <div class="container">
+    <div class="row text-center text-md-start">
+      <div class="col-md-4 mb-4">
+        <img src="images/main-logo.png" width="160" alt="Shoezy Logo">
+        <p class="mt-3">Shoezy offers stylish footwear, clothing, and accessories to match every personality.</p>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="index.html" class="text-white">Home</a></li>
+          <li><a href="about.html" class="text-white">About</a></li>
+          <li><a href="Service.html" class="text-white">Services</a></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h5>Contact</h5>
+        <p>Email: <a href="mailto:shoezyramanattukara@gmail.com" class="text-white">shoezyramanattukara@gmail.com</a></p>
+        <p>Phone: <a href="tel:+919645711333" class="text-white">+91 9645711333</a></p>
+      </div>
+    </div>
+    <div class="text-center mt-4 border-top pt-3">
+      <small>© 2025 Shoezy. All rights reserved.</small>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

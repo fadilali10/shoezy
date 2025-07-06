@@ -1,35 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <title>SHOEZY - GenZ Collection</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shoezy - Offers</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&family=Marcellus&display=swap" rel="stylesheet" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
-
 <body>
+
   <!-- Header -->
   <nav class="navbar px-4 justify-content-between align-items-center" style="background-color: #522672;">
-    <h4 class="m-0 text-white">GenZ Collections</h4>
+    <h4 class="m-0 text-white">🔥 Offers</h4>
     <div class="d-flex gap-2">
       <a href="index.html" class="btn btn-dark">← Home</a>
- <a href="cart.html" class="btn btn-outline-light">🛒 Cart <span class="cart-count">(0)</span></a>
+      <a href="cart.html" class="btn btn-outline-light">🛒 Cart <span class="cart-count">(0)</span></a>
     </div>
   </nav>
 
-  <!-- Product Grid -->
+  <!-- Offers Section -->
   <section class="py-5">
     <div class="container">
-      <h3 class="mb-4 text-center text-uppercase">Premium Festive Dresses</h3>
-      <div id="genz-products" class="row g-4 justify-content-center"></div>
+      <h3 class="mb-4 text-center text-uppercase">Limited-Time Offers</h3>
+      <div id="offers-products" class="row g-4 justify-content-center"></div>
     </div>
   </section>
 
-  <!-- Supabase Script -->
+  <!-- Supabase JS -->
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -38,16 +36,16 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
     );
 
-    async function loadGenZProducts() {
+    async function loadOfferProducts() {
       const { data: products, error } = await supabase
         .from('products')
         .select('*')
-        .eq('category', 'genz')
+        .eq('category', 'offers')
         .order('id', { ascending: false });
 
-      const container = document.getElementById('genz-products');
+      const container = document.getElementById('offers-products');
       if (error || !products.length) {
-        container.innerHTML = `<p class="text-muted text-center">No GenZ products found.</p>`;
+        container.innerHTML = `<p class="text-muted text-center">No special offers available right now.</p>`;
         return;
       }
 
@@ -119,7 +117,7 @@
       if (cartCount) cartCount.textContent = `(${count})`;
     }
 
-    document.addEventListener("DOMContentLoaded", loadGenZProducts);
+    document.addEventListener("DOMContentLoaded", loadOfferProducts);
   </script>
 
   <!-- Footer -->
@@ -128,13 +126,13 @@
       <div class="row text-center text-md-start">
         <div class="col-md-4 mb-4">
           <img src="images/main-logo.png" width="160" alt="Shoezy Logo">
-          <p class="mt-3">Shoezy offers a wide range of stylish products for men, including shoes, chappals, and clothing.</p>
+          <p class="mt-3">Grab the best deals on trending styles from Shoezy. Limited stock, unlimited style.</p>
         </div>
         <div class="col-md-4 mb-4">
           <h5>Quick Links</h5>
           <ul class="list-unstyled">
             <li><a href="index.html" class="text-white">Home</a></li>
-            <li><a href="about.html" class="text-white">Blog</a></li>
+            <li><a href="about.html" class="text-white">About</a></li>
             <li><a href="Service.html" class="text-white">Services</a></li>
           </ul>
         </div>
@@ -155,7 +153,7 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Bootstrap Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -28,68 +28,20 @@
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="main-header">
-    <div class="header-container">
-      <a href="index.html"><img src="images/main-logo.png" alt="Shoezy Logo" class="logo"></a>
-      <nav class="nav-menu">
-        <a href="index.html">Home</a>
-        <a href="about.html">Blog</a>
-        <a href="Service.html">Services</a>
-        <a href="signin.html">My Account</a>
-      </nav>
-    <ul class="white-right-menu">
-  <li>
-    <input id="search" type="text" placeholder="Search Shoezy..." />
-  </li>
-  <li>
-    <button class="search-btn">🔍</button>
-  </li>
-</ul>
+ <!-- HEADER -->
+<header class="main-header">
+  <div class="header-container">
+    <a href="index.html"><img src="images/main-logo.png" alt="Shoezy Logo" class="logo"></a>
+    <nav class="nav-menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="Service.html">Services</a>
+      <a href="signin.html">My Account</a>
+    </nav>
+    <div class="cart-btn"><a href="cart.html">🛒 Cart</a></div>
+  </div>
+</header>
 
-<style>
-.white-right-menu {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0;
-  margin: 0;
-}
-
-.white-right-menu input#search {
-  padding: 8px 12px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  font-size: 14px;
-  width: 200px;
-  transition: 0.3s ease;
-}
-
-.white-right-menu input#search:focus {
-  outline: none;
-  border-color: #f7b738;
-  box-shadow: 0 0 5px #f7b738;
-}
-
-.white-right-menu .search-btn {
-  padding: 8px 12px;
-  border: none;
-  background-color: #f7b738;
-  border-radius: 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.white-right-menu .search-btn:hover {
-  background-color: #e0a924;
-}
-</style>
-
-      <div class="cart-btn"><a href="cart.html">🛒 Cart</a></div>
-    </div>
-  </header>
 <!-- Profile Circle with Slide and Name + Image -->
 <div id="profileContainer" style="position: relative; margin-right: 10px;">
   <img id="profileAvatar"
@@ -112,13 +64,14 @@
     <p id="profileName" style="margin: 0;">👤 Welcome, <span id="displayName">User</span></p>
     <p id="profileEmail" style="font-size: 12px; color: #aaa; margin: 5px 0;"></p>
     <a href="profile.html" style="display: block; margin: 8px 0; color: lightblue; font-size: 14px;">⚙️ My Profile</a>
-<a id="adminLink" href="admin.html" style="display: none; margin: 8px 0; color: lightgreen; font-size: 14px;">🛠️ Admin Panel</a>
-<button onclick="logoutUser()" style="
-      background: #c40000; color: white; border: none;
-      padding: 6px 12px; border-radius: 6px; cursor: pointer;
-    ">Logout</button>
+    <a id="adminLink" href="admin.html" style="display: none; margin: 8px 0; color: lightgreen; font-size: 14px;">🛠️ Admin Panel</a>
+    <button onclick="logoutUser()" style="
+          background: #c40000; color: white; border: none;
+          padding: 6px 12px; border-radius: 6px; cursor: pointer;
+        ">Logout</button>
   </div>
 </div>
+
 <!-- Swiper Slider -->
 <script>
   const swiper = new Swiper(".main-swiper", {
@@ -153,12 +106,10 @@
     }
 
     const user = session.user;
-    const userId = user.id;
-    const name = user.user_metadata?.name || "User";
     const email = user.email;
     const avatar = user.user_metadata?.avatar_url;
 
-    document.getElementById("displayName").innerText = name;
+    document.getElementById("displayName").innerText = user.user_metadata?.name || "User";
     document.getElementById("profileEmail").innerText = email;
 
     if (email === "shoezyweb@gmail.com") {
@@ -169,10 +120,10 @@
       document.getElementById("profileAvatar").src = avatar;
     }
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("users")
       .select("name")
-      .eq("id", userId)
+      .eq("email", email)
       .single();
 
     if (data?.name) {
@@ -182,6 +133,7 @@
 
   async function logoutUser() {
     await supabase.auth.signOut();
+    localStorage.clear();
     window.location.href = "signin.html";
   }
 
@@ -236,6 +188,7 @@
     loadProducts();
   });
 </script>
+
   <!-- CATEGORY CARDS -->
   <section class="categories">
     <div class="category-grid">
@@ -278,35 +231,35 @@
     <p>At Shoezy, we bring you a bold collection of men's fashion essentials that are all about style, comfort, and confidence. Whether you're heading to a meeting or stepping out with friends, our range helps you make the perfect impression.</p>
     <div class="collection-grid">
       <div class="collection-card-img">
-        <a href="shoes.html">
+        <a href="collection.html">
           <img src="images/footwer r.png" alt="Footwear"><br>
           <small>Click here ➔</small>
         </a>
       </div>
       <div class="collection-card-img">
-        <a href="Genz.html">
+        <a href="collection.html">
           <img src="images/clothing s.png" alt="Clothing"><br>
           <small>Click here ➔</small>
         </a>
       </div>
       <div class="collection-card-img">
-        <a href="aceessories.html">
+        <a href="collection.html">
           <img src="images/other s.png" alt="Other"><br>
           <small>Click here ➔</small>
         </a>
       </div>
     </div>
-    <a href="chappal.html"><button class="shop-now">Shop Now</button></a>
   </section>
 
   <!-- OFFERS -->
   <section class="offers">
     <h2>Offers!</h2>
-    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+    <p>nlock amazing deals with our exclusive offers – handpicked just for you! Enjoy unbeatable prices on your favorite styles without compromising on quality.</p>
     <div class="offers-box">
       <div class="offer-product">
-        <a href="offer1.html">
+        <a href="offers.html">
           <img src="images/offer s.png" alt="Offer 1">
+            <a href="offers.html"><button class="shop-now">Shop Now</button></a>
         </a>
       </div>
     </div>
@@ -316,31 +269,31 @@
   <!-- PREMIUM COLLECTION -->
   <section class="premium" style="background-image: url('images/star.png');">
     <h2>Premium Collections</h2>
-    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry...</p>
+    <p>Discover timeless elegance with our Premium Collections, where luxury meets craftsmanship.</p>
     <div class="premium-grid">
       <div class="product-card">
-        <a href="shoes.html">
+        <a href="premium.html">
           <img src="images/premium1 - Copy.png" alt="Nike Ambush">
           <p>NIKE AMBUSH</p>
           <span>DISCOVER NOW</span>
         </a>
       </div>
       <div class="product-card">
-        <a href="shoes.html">
+        <a href="premium.html">
           <img src="images/premium 2.png" alt="Adidas Samba">
           <p>ADIDAS SAMBA</p>
           <span>DISCOVER NOW</span>
         </a>
       </div>
       <div class="product-card">
-        <a href="shoes.html">
+        <a href="premium.html">
           <img src="images/premium 3 - Copy.png" alt="New Balance">
           <p>NEW BALANCE 9060</p>
           <span>DISCOVER NOW</span>
         </a>
       </div>
     </div>
-    <a href="shoes.html"><button class="view-more">View More Product</button></a>
+    <a href="premium.html"><button class="view-more">View More Product</button></a>
   </section>
 
   <!-- TESTIMONIAL -->
@@ -392,7 +345,7 @@
   <!-- NEWSLETTER -->
   <section class="newsletter">
     <h4>SIGN UP FOR OUR NEWSLETTER</h4>
-    <form action="#" method="post">
+    <form action="signin.html" method="post">
       <input type="email" placeholder="Enter your email address" required>
       <button type="submit">SIGN UP</button>
     </form>
@@ -414,11 +367,9 @@
       <div class="footer-right">
         <h5>About Shoezy</h5>
         <ul>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="contact.html">Contact Us</a></li>
-          <li><a href="team.html">Our Team</a></li>
-          <li><a href="careers.html">Careers</a></li>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="Service.html">Services</a></li>
         </ul>
       </div>
     </div>

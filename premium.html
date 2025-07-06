@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Premium Shoes - Shoezy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      background: linear-gradient(to right, #f2f2f2, #e6e6e6);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .premium-banner {
+      background: url('images/premium-banner.jpg') no-repeat center center/cover;
+      height: 300px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+    }
+    .premium-banner h1 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+    .premium-card {
+      background: #fff;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+    .premium-card:hover {
+      transform: translateY(-6px);
+    }
+    .premium-card img {
+      border-radius: 12px 12px 0 0;
+      object-fit: cover;
+      height: 240px;
+    }
+    .product-price del {
+      color: #999;
+      margin-left: 6px;
+    }
+    .offer-tag {
+      background: #dc3545;
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-left: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #000;">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="index.html"><img src="images/main-logo.png" height="32" alt="Shoezy Logo"/></a>
+      <div class="d-flex gap-3 ms-auto">
+        <a href="index.html" class="btn btn-outline-light">← Home</a>
+        <a href="cart.html" class="btn btn-dark">🛒 Cart <span class="cart-count">(0)</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Banner -->
+  <section class="premium-banner">
+    <h1>Premium Shoe Collection</h1>
+  </section>
+
+  <!-- Product Grid -->
+  <section class="container py-5">
+    <h3 class="text-center mb-4">Step into Luxury</h3>
+    <div id="premium-products" class="row g-4 justify-content-center"></div>
+  </section>
+
+  <!-- Supabase Integration -->
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabase = createClient(
+      'https://rukoeadcdrhtzmlwpktf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+    );
+
+    async function loadPremiumShoes() {
+      const { data: products, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('category', 'premium')
+        .order('id', { ascending: false });
+
+      const container = document.getElementById('premium-products');
+      if (error || !products.length) {
+        container.innerHTML = `<p class="text-muted text-center">No premium shoes available right now.</p>`;
+        return;
+      }
+
+      container.innerHTML = products.map(p => {
+        const discount = Math.round(100 - (p.price_discounted / p.price_original * 100));
+        return `
+          <div class="col-6 col-md-4 col-lg-3">
+            <div class="premium-card">
+              <img src="${p.img}" class="w-100" alt="${p.name}" />
+              <div class="p-3 text-center">
+                <h6>${p.name}</h6>
+                <p class="product-price">₹${p.price_discounted} <del>₹${p.price_original}</del> <span class="offer-tag">${discount}% OFF</span></p>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-outline-dark add-to-cart">Add to Cart</button>
+                  <button class="btn btn-dark buy-now">Buy Now</button>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      setupCartButtons();
+    }
+
+    function setupCartButtons() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      document.querySelectorAll(".add-to-cart").forEach(button => {
+        button.addEventListener("click", function () {
+          const card = this.closest(".premium-card");
+          const name = card.querySelector("h6").innerText.trim();
+          const price = parseInt(card.querySelector(".product-price").innerText.match(/\d+/)[0]);
+          const img = card.querySelector("img").src;
+          const id = name.toLowerCase().replace(/\s+/g, '-');
+          const item = cart.find(i => i.id === id);
+          item ? item.qty++ : cart.push({ id, name, price, img, qty: 1 });
+          localStorage.setItem('cart', JSON.stringify(cart));
+          updateCartCount();
+          alert(`${name} added to cart`);
+        });
+      });
+
+      document.querySelectorAll(".buy-now").forEach(button => {
+        button.addEventListener("click", function () {
+          const card = this.closest(".premium-card");
+          const name = card.querySelector("h6").innerText.trim();
+          const price = parseInt(card.querySelector(".product-price").innerText.match(/\d+/)[0]);
+          const img = card.querySelector("img").src;
+          const id = name.toLowerCase().replace(/\s+/g, '-');
+          const item = { id, name, price, img, qty: 1 };
+          localStorage.setItem("buyNow", JSON.stringify(item));
+          window.location.href = "payment.html";
+        });
+      });
+
+      updateCartCount();
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const count = cart.reduce((sum, i) => sum + i.qty, 0);
+      document.querySelector(".cart-count").textContent = `(${count})`;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadPremiumShoes);
+  </script>
+
+  <!-- Premium Footer -->
+  <footer style="background: linear-gradient(to right, #522672, #522672); color: #f1f1f1;" class="pt-5 pb-3 mt-5">
+    <div class="container">
+      <div class="row text-center text-md-start">
+        <div class="col-md-4 mb-4">
+          <img src="images/main-logo.png" width="160" alt="Shoezy Logo">
+          <p class="mt-3 text-muted">Premium elegance redefined. Discover the finest quality shoes at Shoezy.</p>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5 style="color: gold;">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="index.html" class="text-light text-decoration-none"> Home</a></li>
+            <li><a href="about.html" class="text-light text-decoration-none"> About</a></li>
+            <li><a href="Service.html" class="text-light text-decoration-none"> Services</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-4">
+          <h5 style="color: gold;">Contact Us</h5>
+          <p>Email: <a href="mailto:shoezyramanattukara@gmail.com" class="text-light text-decoration-none">shoezyramanattukara@gmail.com</a></p>
+          <p>Phone: <a href="tel:+919645711333" class="text-light text-decoration-none">+91 9645711333</a></p>
+          <div class="d-flex gap-3 mt-2">
+            <a href="https://facebook.com/profile.php?id=100064077753559" class="text-light text-decoration-none"> Facebook</a>
+            <a href="https://youtube.com/@shoezy_692" class="text-light text-decoration-none"> YouTube</a>
+            <a href="https://www.instagram.com/shoezy_2.0" class="text-light text-decoration-none"> Instagram</a>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-4 border-top border-secondary pt-3">
+        <small style="color: #ccc;">© 2025 Shoezy Premium. All rights reserved.</small>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <title>SHOEZY - GenZ Collection</title>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <title>SHOEZY - Pants Collection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
@@ -12,20 +11,20 @@
 </head>
 
 <body>
-  <!-- Header -->
+  <!-- Navbar -->
   <nav class="navbar px-4 justify-content-between align-items-center" style="background-color: #522672;">
-    <h4 class="m-0 text-white">GenZ Collections</h4>
+    <h4 class="m-0 text-white">Pants Collection</h4>
     <div class="d-flex gap-2">
-      <a href="index.html" class="btn btn-dark">← Home</a>
- <a href="cart.html" class="btn btn-outline-light">🛒 Cart <span class="cart-count">(0)</span></a>
+            <a href="index.html" class="btn btn-dark">← Home</a>
+      <a href="cart.html" class="btn btn-outline-light">🛒 Cart <span class="cart-count">(0)</span></a>
     </div>
   </nav>
 
   <!-- Product Grid -->
   <section class="py-5">
     <div class="container">
-      <h3 class="mb-4 text-center text-uppercase">Premium Festive Dresses</h3>
-      <div id="genz-products" class="row g-4 justify-content-center"></div>
+      <h3 class="mb-4 text-center text-uppercase">Stylish Pants for Every Occasion</h3>
+      <div id="pants-products" class="row g-4 justify-content-center"></div>
     </div>
   </section>
 
@@ -38,16 +37,16 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
     );
 
-    async function loadGenZProducts() {
+    async function loadPantsProducts() {
       const { data: products, error } = await supabase
         .from('products')
         .select('*')
-        .eq('category', 'genz')
+        .eq('category', 'pants')
         .order('id', { ascending: false });
 
-      const container = document.getElementById('genz-products');
+      const container = document.getElementById('pants-products');
       if (error || !products.length) {
-        container.innerHTML = `<p class="text-muted text-center">No GenZ products found.</p>`;
+        container.innerHTML = `<p class="text-muted text-center">No pants products found.</p>`;
         return;
       }
 
@@ -87,8 +86,7 @@
           const img = card.querySelector("img").src;
           const id = name.toLowerCase().replace(/\s+/g, '-');
           const item = cart.find(i => i.id === id);
-          if (item) item.qty++;
-          else cart.push({ id, name, price, img, qty: 1 });
+          item ? item.qty++ : cart.push({ id, name, price, img, qty: 1 });
 
           localStorage.setItem('cart', JSON.stringify(cart));
           updateCartCount();
@@ -119,7 +117,7 @@
       if (cartCount) cartCount.textContent = `(${count})`;
     }
 
-    document.addEventListener("DOMContentLoaded", loadGenZProducts);
+    document.addEventListener("DOMContentLoaded", loadPantsProducts);
   </script>
 
   <!-- Footer -->
@@ -128,13 +126,13 @@
       <div class="row text-center text-md-start">
         <div class="col-md-4 mb-4">
           <img src="images/main-logo.png" width="160" alt="Shoezy Logo">
-          <p class="mt-3">Shoezy offers a wide range of stylish products for men, including shoes, chappals, and clothing.</p>
+          <p class="mt-3">Shoezy offers high-quality pants and trendy menswear for every style.</p>
         </div>
         <div class="col-md-4 mb-4">
           <h5>Quick Links</h5>
           <ul class="list-unstyled">
             <li><a href="index.html" class="text-white">Home</a></li>
-            <li><a href="about.html" class="text-white">Blog</a></li>
+            <li><a href="about.html" class="text-white">About</a></li>
             <li><a href="Service.html" class="text-white">Services</a></li>
           </ul>
         </div>
@@ -142,11 +140,6 @@
           <h5>Contact</h5>
           <p>Email: <a href="mailto:shoezyramanattukara@gmail.com" class="text-white">shoezyramanattukara@gmail.com</a></p>
           <p>Phone: <a href="tel:+919645711333" class="text-white">+91 9645711333</a></p>
-          <div class="d-flex gap-3 mt-2">
-            <a href="https://facebook.com/profile.php?id=100064077753559" class="text-white">Facebook</a>
-            <a href="https://youtube.com/@shoezy_692" class="text-white">YouTube</a>
-            <a href="https://www.instagram.com/shoezy_2.0" class="text-white">Instagram</a>
-          </div>
         </div>
       </div>
       <div class="text-center mt-4 border-top pt-3">
@@ -155,7 +148,7 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Bootstrap Script -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

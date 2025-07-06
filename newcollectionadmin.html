@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shoezy Admin - New Collection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .admin-box {
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+      width: 420px;
+      max-width: 90%;
+    }
+    .admin-box h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      color: #2c3e50;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    input:focus, select:focus {
+      border-color: #5e72e4;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(94,114,228,0.2);
+    }
+    button {
+      background: #000;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #c40000;
+    }
+    .success {
+      color: #28a745;
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-box">
+    <h2>➕ Add to New Collection</h2>
+    <input type="text" id="name" placeholder="Product Name" required />
+    <select id="category" required>
+      <option value="">Select Category</option>
+      <option value="footwear">Footwear</option>
+      <option value="clothing">Clothing</option>
+      <option value="others">Others</option>
+    </select>
+    <input type="number" id="price_original" placeholder="Original Price (₹)" required />
+    <input type="number" id="price_discounted" placeholder="Discounted Price (₹)" required />
+    <input type="file" id="image" accept="image/*" required />
+    <button id="addBtn">Upload Product</button>
+    <div id="successMessage" class="success"></div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabase = createClient(
+      'https://rukoeadcdrhtzmlwpktf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
+    );
+
+    document.getElementById("addBtn").addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const category = document.getElementById("category").value;
+      const price_original = parseFloat(document.getElementById("price_original").value);
+      const price_discounted = parseFloat(document.getElementById("price_discounted").value);
+      const imageFile = document.getElementById("image").files[0];
+
+      if (!name || !category || !price_original || !price_discounted || !imageFile) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      // Upload image to Supabase Storage
+      const filePath = `new-collection/${Date.now()}_${imageFile.name}`;
+      const { error: uploadError } = await supabase
+        .storage
+        .from("product-images")
+        .upload(filePath, imageFile);
+
+      if (uploadError) {
+        alert("❌ Image upload failed: " + uploadError.message);
+        return;
+      }
+
+      const imageUrl = `https://rukoeadcdrhtzmlwpktf.supabase.co/storage/v1/object/public/product-images/${filePath}`;
+
+      // Insert into shoezy table
+      const { error: insertError } = await supabase
+        .from("shoezy")
+        .insert([{ name, category, price_original, price_discounted, img: imageUrl }]);
+
+      if (insertError) {
+        alert("❌ Failed to add product: " + insertError.message);
+        return;
+      }
+
+      document.getElementById("successMessage").textContent = "✅ Product added successfully!";
+      document.getElementById("name").value = "";
+      document.getElementById("category").value = "";
+      document.getElementById("price_original").value = "";
+      document.getElementById("price_discounted").value = "";
+      document.getElementById("image").value = "";
+    });
+  </script>
+</body>
+</html>
