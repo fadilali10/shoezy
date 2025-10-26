@@ -25,147 +25,138 @@
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
 
  <!-- HEADER -->
-<header class="main-header">
-  <div class="header-container">
-    <a href="index.html"><img src="images/main-logo.png" alt="Shoezy Logo" class="logo"></a>
-    <nav class="nav-menu">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="Service.html">Services</a>
-      <a href="signin.html">My Account</a>
+<header class="main-header" style="background: linear-gradient(90deg, #2e003e, #5d0e6f); padding: 10px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); border-bottom: 2px solid #ffd700;">
+  <div class="header-container" style="display: flex; align-items: center; justify-content: space-between;">
+    
+    <!-- Left Logo -->
+    <a href="index.html">
+      <img src="images/main-logo.png" alt="Shoezy Logo" class="logo" style="height: 150px; width: auto;">
+    </a>
+
+    <!-- Navigation -->
+    <nav class="nav-menu" style="flex-grow: 1; text-align: center;">
+      <a href="index.html" style="margin: 0 15px; color: white; font-weight: 600; text-decoration: none;">Home</a>
+      <a href="about.html" style="margin: 0 15px; color: white; font-weight: 600; text-decoration: none;">About</a>
+      <a href="Service.html" style="margin: 0 15px; color: white; font-weight: 600; text-decoration: none;">Services</a>
+      <a href="signin.html" style="margin: 0 15px; color: white; font-weight: 600; text-decoration: none;">My Account</a>
+      <a href="cart.html" style="margin: 0 15px; color: white; font-weight: 600; text-decoration: none;">🛒 Cart</a>
     </nav>
-    <div class="cart-btn"><a href="cart.html">🛒 Cart</a></div>
+
+    <!-- Profile / Banner -->
+    <div id="profileContainer" style="position: relative; margin-left: 20px;">
+      <div id="profileAvatar" style="
+        background: linear-gradient(135deg, #ffd700, #ff9500);
+        color: #2e003e;
+        font-weight: 700;
+        font-size: 18px;
+        display: flex; align-items: center; justify-content: center;
+        padding: 12px 25px;
+        border-radius: 40px;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+      ">
+        👋 Welcome, <span id="displayNameBanner">Guest</span>
+      </div>
+
+      <!-- Profile Dropdown -->
+      <div id="profileBox" style="
+        position: absolute; top: 70px; right: 0;
+        background: linear-gradient(135deg, #430569, #6d1b8d);
+        color: white;
+        padding: 0; border-radius: 12px; width: 250px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        font-family: 'Inter', sans-serif;
+        opacity: 0;
+        transform: scale(0.9) translateY(-10px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        overflow: hidden;
+      ">
+        <div style="background: rgba(255,255,255,0.08); padding: 14px; text-align: center;">
+          <p id="profileName" style="margin: 0; font-weight: 600; color: #ffd700;">
+            👤 <span id="displayName">User</span>
+          </p>
+          <p id="profileEmail" style="font-size: 12px; color: #ddd; margin: 5px 0;"></p>
+        </div>
+        <a href="profile.html" style="display: block; padding: 12px 16px; color: #fff; text-decoration: none;">⚙️ My Profile</a>
+        <a id="adminLink" href="admin.html" style="display: none; padding: 12px 16px; color: #fff; text-decoration: none;">🛠️ Admin Panel</a>
+        <button onclick="logoutUser()" style="width: 100%; background: #c40000; color: white; border: none; padding: 10px; font-weight: 600; cursor: pointer;">🚪 Logout</button>
+      </div>
+    </div>
   </div>
 </header>
 
-<!-- Profile Circle with Slide and Name + Image -->
-<div id="profileContainer" style="position: relative; margin-right: 10px;">
-  <img id="profileAvatar"
-       src="https://img.icons8.com/ios-glyphs/60/user--v1.png"
-       alt="Profile"
-       style="width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 2px solid white;" />
-
-  <div id="profileBox" style="
-    position: absolute; top: 60px; right: 0;
-    background: rgba(0, 0, 0, 0.95); color: white;
-    padding: 15px; border-radius: 12px; width: 230px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-    font-family: 'Inter', sans-serif;
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: all 0.3s ease;
-    z-index: 1000;
-  ">
-    <p id="profileName" style="margin: 0;">👤 Welcome, <span id="displayName">User</span></p>
-    <p id="profileEmail" style="font-size: 12px; color: #aaa; margin: 5px 0;"></p>
-    <a href="profile.html" style="display: block; margin: 8px 0; color: lightblue; font-size: 14px;">⚙️ My Profile</a>
-    <a id="adminLink" href="admin.html" style="display: none; margin: 8px 0; color: lightgreen; font-size: 14px;">🛠️ Admin Panel</a>
-    <button onclick="logoutUser()" style="
-          background: #c40000; color: white; border: none;
-          padding: 6px 12px; border-radius: 6px; cursor: pointer;
-        ">Logout</button>
+<!-- ✅ NEW WELCOME BANNER WITH POSTER BACKGROUND -->
+<section class="welcome-banner d-flex align-items-center justify-content-center text-center" 
+style="height: 80vh; background: url('images/banner1.png') center/cover no-repeat; color: white; position: relative; overflow: hidden;">
+  <div class="overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.45);"></div>
+  
+  <div class="banner-content" data-aos="fade-up" data-aos-duration="1200" style="position: relative; z-index: 2; max-width: 900px;">
+    <h1 style="font-size: 3.5rem; font-weight: 700; letter-spacing: 2px;">
+      Welcome to <span style="color:#ffd700;">Shoezy</span>
+    </h1>
+    <p style="font-size: 1.2rem; margin: 20px 0;">Essence of Elegance – Redefining Style with Every Step</p>
+    <a href="collection.html" class="btn btn-warning btn-lg" style="font-weight:600; border-radius:30px;">✨ Explore Now</a>
   </div>
-</div>
+</section>
 
-<!-- Swiper Slider -->
-<script>
-  const swiper = new Swiper(".main-swiper", {
-    loop: true,
-    slidesPerView: 'auto',
-    spaceBetween: 0,
-    speed: 5000,
-    autoplay: {
-      delay: 0,
-      disableOnInteraction: false,
-    },
-    freeMode: true,
-    freeModeMomentum: false,
-  });
-</script>
 
-<!-- Supabase & Profile + Product Loader -->
+<!-- Hover Effects -->
+<style>
+  #profileBox a:hover { background:#ffd700; color:#430569!important; font-weight:600; }
+  #profileBox button:hover { background:#ff3b3b; }
+  #profileAvatar:hover { transform: scale(1.05); box-shadow:0 6px 18px rgba(0,0,0,0.45); }
+</style>
+
+<!-- Supabase Script -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
   const supabase = window.supabase.createClient(
     'https://rukoeadcdrhtzmlwpktf.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1a29lYWRjZHJodHptbHdwa3RmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0NzYyNTcsImV4cCI6MjA2NjA1MjI1N30.1cRhgmPKXMW6oFtz6wtICQ2S-eWSSgdS_3f3cHhKuSQ'
   );
-
   async function loadUserProfile() {
     const { data: { session } } = await supabase.auth.getSession();
-
     if (!session || !session.user) {
       document.getElementById("displayName").innerText = "Guest";
+      document.getElementById("displayNameBanner").innerText = "Guest";
       document.getElementById("profileEmail").innerText = "Not signed in";
       return;
     }
-
     const user = session.user;
     const email = user.email;
-    const avatar = user.user_metadata?.avatar_url;
-
-    document.getElementById("displayName").innerText = user.user_metadata?.name || "User";
+    const name = user.user_metadata?.name || "User";
+    document.getElementById("displayName").innerText = name;
+    document.getElementById("displayNameBanner").innerText = name;
     document.getElementById("profileEmail").innerText = email;
-
     if (email === "shoezyweb@gmail.com") {
       document.getElementById("adminLink").style.display = "block";
     }
-
-    if (avatar) {
-      document.getElementById("profileAvatar").src = avatar;
-    }
-
-    const { data } = await supabase
-      .from("users")
-      .select("name")
-      .eq("email", email)
-      .single();
-
+    const { data } = await supabase.from("users").select("name").eq("email", email).single();
     if (data?.name) {
       document.getElementById("displayName").innerText = data.name;
+      document.getElementById("displayNameBanner").innerText = data.name;
     }
   }
-
   async function logoutUser() {
     await supabase.auth.signOut();
     localStorage.clear();
     window.location.href = "signin.html";
   }
-
-  async function loadProducts() {
-    const { data: products, error } = await supabase.from("products").select("*");
-    if (error) {
-      console.error("Error loading products:", error.message);
-      return;
-    }
-
-    const container = document.getElementById("product-list");
-    if (!container) return;
-
-    container.innerHTML = products.map(product => `
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <img src="${product.image}" class="card-img-top" alt="${product.name}">
-          <div class="card-body">
-            <h5 class="card-title">${product.name}</h5>
-            <p class="card-text">₹${product.price}</p>
-            <button class="btn btn-dark w-100 mb-2" onclick="addToCart('${product.id}', '${product.name}', ${product.price})">Add to Cart</button>
-            <button class="btn btn-outline-dark w-100" onclick="buyNow('${product.id}', '${product.name}', ${product.price})">Buy Now</button>
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
     const toggle = document.getElementById("profileAvatar");
     const box = document.getElementById("profileBox");
-
     if (toggle && box) {
       toggle.addEventListener("click", () => {
         const isVisible = box.style.opacity === "1";
@@ -174,7 +165,6 @@
         box.style.pointerEvents = isVisible ? "none" : "auto";
       });
     }
-
     document.addEventListener("click", function (e) {
       const profile = document.getElementById("profileContainer");
       if (profile && !profile.contains(e.target)) {
@@ -183,11 +173,19 @@
         box.style.pointerEvents = "none";
       }
     });
-
     loadUserProfile();
-    loadProducts();
   });
 </script>
+
+<!-- AOS Animation Script -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init();</script>
+
+<!-- ✅ Keep your categories, collections, offers, premium, testimonials, newsletter & footer here (unchanged) -->
+
+</body>
+</html>
+
 
   <!-- CATEGORY CARDS -->
   <section class="categories">
